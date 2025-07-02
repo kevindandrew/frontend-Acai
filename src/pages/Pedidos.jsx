@@ -1,3 +1,4 @@
+// Pedidos.jsx
 import React, { useEffect, useState } from "react";
 import {
   listaPedidosSucursalPaginados,
@@ -20,7 +21,6 @@ export default function Pedidos() {
     error: null,
   });
 
-  // Cargar sucursales al montar el componente
   useEffect(() => {
     const cargarSucursales = async () => {
       try {
@@ -37,7 +37,6 @@ export default function Pedidos() {
     cargarSucursales();
   }, []);
 
-  // Cargar pedidos cuando cambia la sucursal o la página
   const cargarPedidos = async (page = 1) => {
     if (!sucursalSeleccionada) return;
 
@@ -84,26 +83,30 @@ export default function Pedidos() {
     cargarPedidos(1);
   };
 
+  const sucursalActual = dataSucursales.find(
+    (s) => s.id_sucursal === sucursalSeleccionada
+  );
+
   return (
     <div className="container mx-auto px-4 py-6">
-      {/* Encabezado y selector de sucursal */}
+      {/* Encabezado */}
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-gray-800 mb-2">
-          Gestión de Pedidos
+          Administración de Pedidos
         </h1>
-        <div className="bg-white rounded-lg shadow-md p-4">
+        <div className="bg-green-100 rounded-lg shadow-md p-4">
           <h2 className="text-xl font-semibold text-gray-700 mb-3">
-            Seleccionar Sucursal
+            Seleccione una Sucursal
           </h2>
           <div className="flex flex-wrap gap-2">
             {dataSucursales.map((sucursal) => (
               <button
                 key={sucursal.id_sucursal}
                 onClick={() => setSucursalSeleccionada(sucursal.id_sucursal)}
-                className={`px-4 py-2 rounded-full transition-all ${
+                className={`px-4 py-2 rounded-full transition-all font-semibold ${
                   sucursalSeleccionada === sucursal.id_sucursal
-                    ? "bg-indigo-600 text-white shadow-lg"
-                    : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                    ? "bg-purple-700 text-white shadow-md"
+                    : "bg-purple-300 text-purple-900 hover:bg-purple-400"
                 }`}
               >
                 {sucursal.nombre}
@@ -113,56 +116,25 @@ export default function Pedidos() {
         </div>
       </div>
 
-      {/* Panel principal de pedidos */}
-      <div className="bg-white rounded-lg shadow-md overflow-hidden">
-        {/* Barra de herramientas */}
-        <div className="flex flex-col md:flex-row justify-between items-start md:items-center p-4 border-b">
-          <div>
-            <h2 className="text-2xl font-bold text-gray-800">
-              Pedidos de{" "}
-              {sucursalSeleccionada
-                ? dataSucursales.find(
-                    (s) => s.id_sucursal === sucursalSeleccionada
-                  )?.nombre
-                : "Sucursal"}
-            </h2>
-            {!pagination.loading && (
-              <p className="text-sm text-gray-500 mt-1">
-                Mostrando {(pagination.page - 1) * pagination.pageSize + 1} -
-                {Math.min(
-                  pagination.page * pagination.pageSize,
-                  pagination.total
-                )}{" "}
-                de {pagination.total} registros
-              </p>
-            )}
-          </div>
-
+      {/* Panel de pedidos */}
+      <div className="bg-green-100 rounded-lg shadow-md p-4">
+        {/* Título y botón */}
+        <div className="flex justify-between items-center mb-4">
+          <h2 className="text-2xl font-bold text-blue-900">
+            Pedido de {sucursalActual?.nombre || "Sucursal"} 🍦
+          </h2>
           <button
             onClick={() => setModalNuevoPedido(true)}
-            className="mt-3 md:mt-0 bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg flex items-center transition-colors"
+            className="bg-lime-400 hover:bg-lime-500 text-black font-bold py-2 px-4 rounded-lg shadow inline-flex items-center"
           >
-            <svg
-              className="w-5 h-5 mr-2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth="2"
-                d="M12 6v6m0 0v6m0-6h6m-6 0H6"
-              />
-            </svg>
-            Nuevo Pedido
+            + Nueva Pedido 🍦
           </button>
         </div>
 
-        {/* Contenido */}
+        {/* Tabla o estado de carga */}
         {pagination.loading ? (
           <div className="p-8 flex justify-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-indigo-500"></div>
+            <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-purple-500"></div>
           </div>
         ) : pagination.error ? (
           <div className="p-6 text-center">
@@ -185,17 +157,15 @@ export default function Pedidos() {
         )}
       </div>
 
-      {/* Modal para nuevo pedido */}
+      {/* Modal agregar */}
       {modalNuevoPedido && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] overflow-y-auto">
-            <AgregarPedido
-              setModalNuevoPedido={setModalNuevoPedido}
-              sucursalSeleccionada={sucursalSeleccionada}
-              sucursales={dataSucursales}
-              onPedidoCreado={manejarPedidoCreado}
-            />
-          </div>
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-50">
+          <AgregarPedido
+            setModalNuevoPedido={setModalNuevoPedido}
+            sucursalSeleccionada={sucursalSeleccionada}
+            sucursales={dataSucursales}
+            onPedidoCreado={manejarPedidoCreado}
+          />
         </div>
       )}
     </div>
