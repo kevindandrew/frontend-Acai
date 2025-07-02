@@ -29,11 +29,15 @@ export default function DashboardTendencia({ dataTendencia }) {
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="producto"
-              angle={0}
+              tickFormatter={(name) =>
+                name.length > 10 ? name.slice(0, 10) + "..." : name
+              }
+              angle={-45}
               textAnchor="end"
               interval={0}
-              height={20}
+              height={80}
             />
+
             <YAxis />
             <Tooltip />
             <Legend />

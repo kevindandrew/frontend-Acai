@@ -124,6 +124,18 @@ export default function Aside({ openMenu }) {
             ⚽ Predicciones
           </Link>
         )}
+        {idRol === 1 && (
+          <Link
+            to="/backups"
+            className={`px-3 py-2 rounded-md transition ${
+              location.pathname === "/backups"
+                ? "bg-green-400 text-white font-bold"
+                : "hover:bg-[#a45bb0] text-white"
+            }`}
+          >
+            ⚽ Backups
+          </Link>
+        )}
         <button
           onClick={() => {
             localStorage.removeItem("token");

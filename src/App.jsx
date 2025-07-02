@@ -10,6 +10,7 @@ import Inventarios from "./pages/Inventarios";
 import Reportes from "./pages/Reportes";
 import Predicciones from "./pages/Predicciones";
 import Unauthorized from "./pages/Unauthorized";
+import Backups from "./pages/backups";
 import PrivateRoute from "./components/PrivateRoute";
 import RedireccionarPorRol from "./components/RedireccionarPorRol";
 import DashboardLayout from "./layouts/DashboardLayout";
@@ -37,6 +38,7 @@ export default function App() {
           <Route path="productos" element={<Productos />} />
           <Route path="reportes" element={<Reportes />} />
           <Route path="predicciones" element={<Predicciones />} />
+          <Route path="backups" element={<Backups />} />
         </Route>
         <Route path="*" element={<Navigate to="/" />} />
       </Route>
